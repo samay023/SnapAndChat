@@ -82,12 +82,6 @@ router.post(
         message: "Server error"
       });
     }
-
-    // Check if a user exists
-    // Send error
-    // Else create user
-    // Encrypt passwrod
-    // return jsonwebtoken
   }
 );
 
