@@ -24,7 +24,7 @@ router.get("/me", auth, async (req, res) => {
     res.send(profile);
   } catch (e) {
     res.status(500).json({
-      message: e
+      message: e.message
     });
   }
 });
@@ -100,7 +100,6 @@ router.post(
           res.status(200).json(profile);
         }
       }
-      console.log(req.user);
     } catch (e) {
       res.status(500).json({
         message: e.message
@@ -108,5 +107,74 @@ router.post(
     }
   }
 );
+
+/**
+ * Route - GET api/profiles
+ * Description - Get all profiles
+ * Access - Public
+ */
+router.get("/", async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    res.json(profiles);
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
+
+/**
+ * Route - GET api/profile/user/:userid
+ * Description - Get user profile based on id
+ * Access - Public
+ */
+router.get("/user/:userid", async (req, res) => {
+  try {
+    const userID = req.params.userid || "";
+    if (userID.match(/^[0-9a-fA-F]{24}$/)) {
+      const profile = await Profile.findOne({
+        user: userID
+      }).populate("user", ["name", "avatar"]);
+
+      profile
+        ? res.status(200).json(profile)
+        : res.status(400).json({ message: "No profile found" });
+    } else {
+      throw Error("No profile found");
+    }
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
+
+/**
+ * Route - DELETE api/profile/user/:userid
+ * Description - Delete profile, user and posts
+ * Access - public
+ */
+router.delete("/user/:userid", async (req, res) => {
+  try {
+    const userID = req.params.userid || "";
+
+    if (userID.match(/^[0-9a-fA-F]{24}$/)) {
+      await Profile.findOneAndRemove({
+        user: userID
+      });
+
+      await User.findOneAndRemove({ _id: userID });
+
+      res.status(200).json({ message: "Profile deleted" });
+    } else {
+      throw Error("No profile found");
+    }
+  } catch (e) {
+    res.status(500).json({
+      message: e.message
+    });
+  }
+});
 
 module.exports = router;
