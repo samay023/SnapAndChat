@@ -37,7 +37,7 @@ router.post(
 
       if (user) {
         return res.status(400).json({
-          errors: [{ message: "User already exists" }]
+          errors: [{ msg: "User already exists" }]
         });
       }
 
@@ -79,7 +79,7 @@ router.post(
     } catch (error) {
       console.error(error.message);
       return res.status(500).send({
-        message: "Server error"
+        msg: "Server error"
       });
     }
   }
