@@ -17,7 +17,7 @@ router.get("/", auth, async (req, res) => {
     return res.json(user);
   } catch (e) {
     return res.status(500).send({
-      message: e.message
+      msg: e.message
     });
   }
 });
@@ -47,7 +47,7 @@ router.post(
 
       if (!user) {
         return res.status(400).json({
-          errors: [{ message: "Invalid credentials" }]
+          errors: [{ msg: "Invalid credentials" }]
         });
       }
 
@@ -55,7 +55,7 @@ router.post(
 
       if (!isMatch) {
         return res.status(400).json({
-          errors: [{ message: "Invalid credentials" }]
+          errors: [{ msg: "Invalid credentials" }]
         });
       }
 
@@ -80,7 +80,7 @@ router.post(
     } catch (error) {
       console.error(error.message);
       return res.status(500).send({
-        message: "Server error"
+        msg: "Server error"
       });
     }
   }

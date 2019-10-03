@@ -42,7 +42,7 @@ router.post(
       }
     } catch (error) {
       return res.status(500).json({
-        message: error.message
+        msg: error.message
       });
     }
   }
@@ -60,7 +60,7 @@ router.get("/", [auth], async (req, res) => {
     return res.status(200).json(post);
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      msg: error.message
     });
   }
 });
@@ -77,13 +77,13 @@ router.delete("/:id", auth, async (req, res) => {
     // Check if user owns the post
     if (post.user.toString() == req.user.id) {
       await post.remove();
-      return res.status(200).json({ message: "Success" });
+      return res.status(200).json({ msg: "Success" });
     } else {
-      return res.status(401).json({ message: "User not authorized" });
+      return res.status(401).json({ msg: "User not authorized" });
     }
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      msg: error.message
     });
   }
 });
@@ -108,7 +108,7 @@ router.put("/like/:id", auth, async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      msg: error.message
     });
   }
 });
@@ -126,9 +126,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
       post.likes.filter(like => like.user.toString() === req.user.id).length ===
       0
     ) {
-      return res
-        .status(400)
-        .json({ message: "Post not yet liked by the user" });
+      return res.status(400).json({ msg: "Post not yet liked by the user" });
     } else {
       // Get remove index
       const removeIndex = post.likes
@@ -141,7 +139,7 @@ router.put("/unlike/:id", auth, async (req, res) => {
     }
   } catch (error) {
     return res.status(500).json({
-      message: error.message
+      msg: error.message
     });
   }
 });
@@ -187,7 +185,7 @@ router.post(
       }
     } catch (error) {
       return res.status(500).json({
-        message: error.message
+        msg: error.message
       });
     }
   }
@@ -209,11 +207,11 @@ router.delete("/comment/:id/:comment_id", auth, async (req, res) => {
     if (!comment) {
       return res
         .status(404)
-        .json({ message: "Comment does not exist for that post" });
+        .json({ msg: "Comment does not exist for that post" });
     } else if (comment.user.toString() != req.user.id) {
       return res
         .status(401)
-        .json({ message: "Comment does not belong to that user" });
+        .json({ msg: "Comment does not belong to that user" });
     } else {
       // Get remove index
       const removeIndex = post.comments
